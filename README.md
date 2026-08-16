@@ -15,10 +15,12 @@ My hands-on journey learning Security Operations Center (SOC) concepts.
 
 - Brute-Force Attack
 - Port Scanning
-- SQL Injection
+- SQL injection, XSS, command injection
 - Phishing
 - DDoS
 - Credential Theft
+- Malware
+-Ransomware
 
 ## My Learning Approach
 
