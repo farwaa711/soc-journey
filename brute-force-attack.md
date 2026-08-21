@@ -101,3 +101,7 @@ For web attacks, you'll have:
 python3 -m http.server 8000
 curl http://127.0.0.1:8000
 
+## Evidence
+
+![Authentication evidence](authentication-evidence.png)
+
