@@ -188,3 +188,7 @@ If Sara denies the login or additional malicious activity is identified, escalat
 * Legitimate commands such as `whoami` and `Get-Process` can become suspicious when their timing and surrounding activity indicate possible reconnaissance.
 * SOC analysts should distinguish **suspicious behavior** from **confirmed compromise**.
 * User validation and post-authentication activity are important when determining whether an account was actually compromised.
+## Evidence
+
+![Authentication evidence](authentication-evidence.png)
+  
