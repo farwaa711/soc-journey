@@ -1,0 +1,173 @@
+1. Authentication logs
+
+Your dataset might have:
+
+time
+user
+src_ip
+action
+service
+
+So you can write:
+
+index=* 
+| table time user src_ip action service
+2. Windows Security logs
+
+These commonly contain fields such as:
+
+EventCode
+Account_Name
+Account_Domain
+Source_Network_Address
+Logon_Type
+ComputerName
+Process_Name
+
+For example:
+
+index=* EventCode=4625
+| table _time Account_Name Source_Network_Address Logon_Type ComputerName
+
+Here action="failed" wouldn't necessarily be the right filter. You'd use the Windows event ID:
+
+EventCode=4625
+
+because 4625 = failed logon.
+
+3. PowerShell logs
+
+You may encounter:
+
+EventCode
+ScriptBlockText
+HostName
+User
+ProcessId
+
+So instead of searching for action="malware", you'd investigate the actual PowerShell content:
+
+index=* EventCode=4104
+| table _time User ScriptBlockText
+
+Then look for things such as:
+
+DownloadString
+IEX
+EncodedCommand
+ExecutionPolicy Bypass
+4. Process creation logs
+
+For Windows process creation, you might see:
+
+EventCode
+New_Process_Name
+Creator_Process_Name
+CommandLine
+Account_Name
+ProcessId
+
+You could investigate:
+
+index=* EventCode=4688
+| table _time Account_Name New_Process_Name Creator_Process_Name CommandLine
+
+Now you're asking:
+
+Who created the process? What process was created? What parent process created it? What command did it execute?
+
+5. Network logs
+
+These can use fields like:
+
+src_ip
+dest_ip
+src_port
+dest_port
+protocol
+action
+bytes
+
+Example:
+
+index=*
+| table _time src_ip dest_ip src_port dest_port protocol action
+6. Web logs
+
+You might see:
+
+clientip
+uri
+method
+status
+useragent
+bytes
+host
+
+Example:
+
+index=*
+| table _time clientip method uri status useragent
+
+Then you investigate things like:
+
+GET /login
+GET /admin
+GET /../../etc/passwd
+POST /login
+The skill you actually need
+
+Think of every log as having a different vocabulary.
+
+For example:
+
+Authentication
+
+Who? → user
+From where? → src_ip
+What happened? → action
+
+Windows
+
+Who? → Account_Name
+What event? → EventCode
+What process? → New_Process_Name
+What command? → CommandLine
+
+PowerShell
+
+Who? → User
+What script? → ScriptBlockText
+What event? → EventCode
+
+Network
+
+From where? → src_ip
+Going where? → dest_ip
+Which port? → dest_port
+How much data? → bytes
+
+Web
+
+Who connected? → clientip
+What URL? → uri
+What method? → method
+What response? → status
+
+And there's a very useful Splunk trick
+
+When you don't know the field names, don't guess them.
+
+Run:
+
+index=your_index
+| head 10
+
+Then look at the fields Splunk extracted.
+
+Or:
+
+index=your_index
+| fieldsummary
+
+That helps you discover what fields are actually available.
